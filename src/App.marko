@@ -1,0 +1,61 @@
+style {
+  #main_div {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    height: 98vh;
+    width: 98vw;
+  }
+}
+
+static {
+  const electron = require('electron');
+  const remote = electron.remote;
+  const format = require('string-template');
+}
+
+class {
+  onCreate() {
+    this.state = {
+      title_text: 'Welcome...',
+      subtitle_text: '...to your first Marko App running on Electon!',
+      memory_free: 'N/A',
+      show_hypnotoad: false
+    };
+    setInterval(() => {this.update_memory();}, 1000);
+  }
+
+  update_memory() {
+    let usage = remote.process.getSystemMemoryInfo().free;
+    this.state.memory_free = format('{0} MBytes', [Math.round(usage / 1e3)]);
+  }
+
+  toggle() {
+    console.log('Click!');
+    console.log(this.state.show_hypnotoad)
+    if (this.state.show_hypnotoad == false) {
+      this.state.show_hypnotoad = true;
+      this.state.title_text = 'BEHOLD THE MIGHTY HYPNOTOAD!';
+      this.state.subtitle_text = 'ALL YOUR FREE WILL BELONGS TO US';
+    } else {
+      this.state.show_hypnotoad = false;
+      this.state.title_text = 'Welcome...';
+      this.state.subtitle_text = '...to your first Marko App running on Electon!';
+    }
+  }
+}
+
+div.box.has-text-centered id="main_div"
+  h1.title -- ${state.title_text}
+  h2.subtitle -- ${state.subtitle_text}
+  button.button.is-primary on-click('toggle') -- This button does hello!
+  br
+  div.tags.has-addons style="display: inline-block;"
+    span.tag.is-dark -- System free memory
+    span.tag.is-info -- ${state.memory_free}
+  br
+  if(state.show_hypnotoad == true)
+    div style="height: 300px; width: 320px; display: inline-block"
+      figure.image.is-square
+        img src="static/hypnotoad.jpg"
